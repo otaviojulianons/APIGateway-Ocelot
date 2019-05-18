@@ -16,8 +16,9 @@ namespace Customers.Consumers
 
         public Task Consume(ConsumeContext<ImageResizeMessageResponse> context)
         {
-            var image = _service.Images[context.Message.Id];
-            image.Size = context.Message.Size;
+            //TODO: fix consumer
+            //var image = _service.Images[context.Message.Id];
+            //image.Size = context.Message.Size;
             return Task.CompletedTask;
         }
     }

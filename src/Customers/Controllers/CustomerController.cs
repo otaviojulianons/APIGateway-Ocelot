@@ -1,81 +1,67 @@
 ﻿using Customers.Models;
 using Customers.Services;
-using MassTransit;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using SharedKernel.Messaging.Messages;
 using System;
-using System.IO;
+using System.Collections.Generic;
 
 namespace Customers.Controllers
 {
-    [Route("[action]")]
+    [Route("[controller]")]
     [ApiController]
     public class CustomerController : ControllerBase
     {
-        private const string IMAGES_PATH = "Images";
-        private IBusControl _bus;
+
         private CustomerService _service;
 
-        public CustomerController(IBusControl bus, CustomerService service)
+        public CustomerController(CustomerService service)
         {
-            _bus = bus;
             _service = service;
         }
 
-        [HttpPost]
-        public UploadResponseModel UploadSelfie(IFormFile file)
+        [HttpGet()]
+        public IEnumerable<CustomerModel> GetCustomers() => _service.GetCustomers();
+
+        [HttpGet("{id}")]
+        public IActionResult GetCustomer([FromRoute] Guid id)
+        {
+            var customer = _service.GetCustomer(id);
+
+            if (customer == null)
+                return NotFound();
+            else
+                return new JsonResult(customer);
+        }
+        
+
+        [HttpGet("/Customer/{id}/Selfie")]
+        public IActionResult DownloadSelfie([FromRoute] Guid id)
+        {
+            var bytes = _service.DonloadSelfie(id);
+            if (bytes.Length == 0)
+                return NotFound();
+            return new FileContentResult(bytes, "image/jpeg");
+        }
+
+
+        [HttpPost("/Customer/{id}/Selfie")]
+        public IActionResult UploadSelfie([FromRoute] Guid id, IFormFile file)
         {
             try
             {
-                var id = Guid.NewGuid();
-                var filePath = Path.Combine(Directory.GetCurrentDirectory(), IMAGES_PATH);
-               
-                if (!Directory.Exists(IMAGES_PATH))
-                    Directory.CreateDirectory(IMAGES_PATH);
+                if (file == null)
+                    throw new Exception("File not found.");
 
-                var extension = Path.GetExtension(file.FileName);
-                filePath = Path.Combine(filePath, id.ToString() + extension);
+                if (!file.ContentType.StartsWith("image/"))
+                    return BadRequest("File not is a image.");
 
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                    file.CopyTo(stream);
-
-                var imageInfo = new UploadResponseModel()
-                {
-                    SelfieId = id,
-                    Message = "Upload file successful.",
-                    Size = Math.Round((decimal)file.Length / (1024 * 1024), 2)
-                };
-
-                _service.Images.Add(id, imageInfo);
-
-                _bus.Send(new ImageResizeMessage() { Id = id, FilePath = filePath });
-
-                return imageInfo;
+                _service.UploadSelfie(id, file.OpenReadStream());
+                return Ok("Upload file successful.");
             }
             catch (Exception ex)
             {
-                return new UploadResponseModel() { Message = ex.Message };
+                return BadRequest(ex.Message);
             }
-        }
-
-        [HttpGet("{filename}")]
-        public IActionResult DownloadSelfie([FromRoute] string filename)
-        {
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), IMAGES_PATH, filename);
-            if (System.IO.File.Exists(filePath))
-                return new FileContentResult(System.IO.File.ReadAllBytes(filePath), "image/jpeg");
-            else
-                return NotFound();
-        }
-
-        [HttpGet("{id}")]
-        public IActionResult SelfieInfo([FromRoute] Guid id)
-        {
-            if (_service.Images.ContainsKey(id))
-                return new JsonResult(_service.Images[id]);
-            else
-                return NotFound();
         }
     }
 }

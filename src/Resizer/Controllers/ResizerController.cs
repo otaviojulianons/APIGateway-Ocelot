@@ -10,10 +10,13 @@ namespace Resizer.Controllers
     public class ResizerController : ControllerBase
     {
         [HttpPost("{percent}")]
-        public IActionResult Post(IFormFile file, [FromRoute] float percent = 50)
+        public IActionResult Post(IFormFile file, [FromRoute] float percent)
         {
             if (file == null)
-                return NotFound();
+                return BadRequest("Invalid file.");
+
+            if (percent <= 0 || percent >= 100)
+                return BadRequest("Invalid percent.");
 
             MemoryStream memoryStream = new MemoryStream();
             file.CopyTo(memoryStream);

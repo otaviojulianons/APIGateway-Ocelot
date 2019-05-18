@@ -7,9 +7,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.PlatformAbstractions;
 using Resizer.Consumers;
 using SharedKernel;
+using Swashbuckle.AspNetCore.Swagger;
 using System;
+using System.IO;
 
 namespace Resizer
 {
@@ -27,6 +30,12 @@ namespace Resizer
         {
             //services.Configure<ConsulConfig>(Configuration.GetSection("consulConfig"));
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "Resizer", Version = "v1" });
+                var filePath = Path.Combine(PlatformServices.Default.Application.ApplicationBasePath, "Resizer.xml");
+                c.IncludeXmlComments(filePath);
+            });
             services.AddSingleton<IConsulClient, ConsulClient>(p => new ConsulClient(consulConfig =>
             {
                 var address = Configuration["consulConfig:address"];
@@ -35,8 +44,11 @@ namespace Resizer
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddMassTransit(x => x.AddConsumer<ResizeConsumer>());
 
-            BusConfig busConfig = new BusConfig("guest", "guest", "rabbitmq://localhost:32769/");
-
+            BusConfig busConfig = new BusConfig(
+                 Configuration["rabbitmq:username"],
+                 Configuration["rabbitmq:password"],
+                 Configuration["rabbitmq:host"]
+            );
             services.AddSingleton(provider =>
             {
                 return Bus.Factory.CreateUsingRabbitMq(cfg =>
@@ -70,7 +82,13 @@ namespace Resizer
                 app.UseHsts();
             }
 
+            app.UseStaticFiles();
             app.UseHttpsRedirection();
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
+            });
             app.UseMvc();
 
             //app.RegisterWithConsul(lifetime);
