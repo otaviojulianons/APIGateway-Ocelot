@@ -11,4 +11,6 @@ Este projeto é um compilado de testes de diversas tecnologias. Segue lista abai
 * [Docker-Compose](https://docs.docker.com/compose/)
 * [Kubernetes](https://kubernetes.io/pt/)
 
+## Diagrama de comunicação
+![Diagrama de serviços](docs/diagrama.png)
 
