@@ -6,7 +6,7 @@ namespace Customers.Models
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
-        public CustomerImageModel Selfie { get; set; }
+        public CustomerImageModel Avatar { get; set; }
 
     }
 }

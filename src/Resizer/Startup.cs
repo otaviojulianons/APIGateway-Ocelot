@@ -49,6 +49,12 @@ namespace Resizer
                  Configuration["rabbitmq:password"],
                  Configuration["rabbitmq:host"]
             );
+
+            Console.WriteLine("--- RabbitMQ settings ---");
+            Console.WriteLine("Username: " + busConfig.Username);
+            Console.WriteLine("Password: " + busConfig.Password);
+            Console.WriteLine("Host: " + busConfig.Host);
+
             services.AddSingleton(provider =>
             {
                 return Bus.Factory.CreateUsingRabbitMq(cfg =>

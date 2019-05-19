@@ -20,7 +20,7 @@ namespace FileServer.Controllers
         {
             var status = new
             {
-                ApiName = "customer.api",
+                ApiName = "fileserver.api",
                 Ip = _accessor.HttpContext?.Connection?.RemoteIpAddress?.ToString(),
                 Host = Request.Host.Host,
                 Port = Request.Host.Port,

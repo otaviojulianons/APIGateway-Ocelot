@@ -34,18 +34,18 @@ namespace Customers.Controllers
         }
         
 
-        [HttpGet("/Customer/{id}/Selfie")]
-        public IActionResult DownloadSelfie([FromRoute] Guid id)
+        [HttpGet("/Customer/{id}/Avatar")]
+        public IActionResult DonloadAvatar([FromRoute] Guid id)
         {
-            var bytes = _service.DonloadSelfie(id);
+            var bytes = _service.DonloadAvatar(id);
             if (bytes.Length == 0)
                 return NotFound();
             return new FileContentResult(bytes, "image/jpeg");
         }
 
 
-        [HttpPost("/Customer/{id}/Selfie")]
-        public IActionResult UploadSelfie([FromRoute] Guid id, IFormFile file)
+        [HttpPost("/Customer/{id}/Avatar")]
+        public IActionResult UploadAvatar([FromRoute] Guid id, IFormFile file)
         {
             try
             {
@@ -55,7 +55,7 @@ namespace Customers.Controllers
                 if (!file.ContentType.StartsWith("image/"))
                     return BadRequest("File not is a image.");
 
-                _service.UploadSelfie(id, file.OpenReadStream());
+                _service.UploadAvatar(id, file.OpenReadStream());
                 return Ok("Upload file successful.");
             }
             catch (Exception ex)

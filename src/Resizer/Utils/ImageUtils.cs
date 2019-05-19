@@ -20,6 +20,19 @@ namespace Resizer.Utils
             }
         }
 
+        public static byte[] Resize(byte[] file, int height, int width)
+        {
+            using (Image<Rgba32> image = Image.Load(file))
+            {
+                image.Mutate(x => x
+                     .Resize(height, width)
+                     .Grayscale());
+                MemoryStream memoryStream = new MemoryStream();
+                image.SaveAsJpeg(memoryStream);
+                return memoryStream.ToArray();
+            }
+        }
+
 
     }
 }

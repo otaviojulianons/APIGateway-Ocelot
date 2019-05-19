@@ -36,39 +36,40 @@ namespace Customers.Services
 
         }
 
-        public byte[] DonloadSelfie(Guid id)
+        public byte[] DonloadAvatar(Guid id)
         {
             var customer = _customers.GetValueOrDefault(id);
             if (customer == null)
                 throw new Exception("Customer not found.");
 
-            if (customer.Selfie == null)
-                throw new Exception("Selfie not found.");
+            if (customer.Avatar == null)
+                throw new Exception("Avatar not found.");
 
-            return _fileServerService.Download(customer.Selfie.SelfieId);
+            return _fileServerService.Download(customer.Avatar.AvatarId);
         }
 
-        public void UploadSelfie(Guid id, Stream file)
+        public void UploadAvatar(Guid id, Stream file)
         {
             var customer = _customers.GetValueOrDefault(id);
             if (customer == null)
                 throw new Exception("Customer not found.");
 
-            var selfieId = _fileServerService.Upload(file);
+            var avatarId = _fileServerService.Upload(file);
 
-            var selfie = new CustomerImageModel()
+            var avatar = new CustomerImageModel()
             {
                 CustomerId = id,
-                SelfieId = selfieId,
+                AvatarId = avatarId,
                 Size = Math.Round((decimal)file.Length / (1024 * 1024), 2)
             };
 
-            customer.Selfie = selfie;
+            customer.Avatar = avatar;
 
             _bus.Send(new ImageResizeMessage()
             {
-                Id = selfieId,
-                Percent = 10
+                Id = avatarId,
+                Height = 64,
+                Width = 64
             });
         }
 

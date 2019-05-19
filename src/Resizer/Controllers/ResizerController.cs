@@ -9,8 +9,8 @@ namespace Resizer.Controllers
     [ApiController]
     public class ResizerController : ControllerBase
     {
-        [HttpPost("{percent}")]
-        public IActionResult Post(IFormFile file, [FromRoute] float percent)
+        [HttpPost("/Resizer/{percent}%")]
+        public IActionResult ResizeByPercent(IFormFile file, [FromRoute] float percent)
         {
             if (file == null)
                 return BadRequest("Invalid file.");
@@ -21,6 +21,21 @@ namespace Resizer.Controllers
             MemoryStream memoryStream = new MemoryStream();
             file.CopyTo(memoryStream);
             var newImage = ImageUtils.Resize(memoryStream.ToArray(), percent);
+            return new FileContentResult(newImage, "image/jpeg");
+        }
+
+        [HttpPost("/Resizer/{height}x{width}")]
+        public IActionResult ResizeByFixedSize(IFormFile file, [FromRoute] int height, [FromRoute] int width)
+        {
+            if (file == null)
+                return BadRequest("Invalid file.");
+
+            if (height <= 0 || width <= 0)
+                return BadRequest("Invalid size.");
+
+            MemoryStream memoryStream = new MemoryStream();
+            file.CopyTo(memoryStream);
+            var newImage = ImageUtils.Resize(memoryStream.ToArray(), height, width);
             return new FileContentResult(newImage, "image/jpeg");
         }
     }

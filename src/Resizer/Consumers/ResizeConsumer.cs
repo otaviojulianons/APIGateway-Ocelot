@@ -21,10 +21,11 @@ namespace Resizer.Consumers
         public Task Consume(ConsumeContext<ImageResizeMessage> context)
         {
             var id = context.Message.Id;
-            var percent = context.Message.Percent;
+            var height = context.Message.Height;
+            var width = context.Message.Width;
 
             var file = _fileServerService.Download(id);
-            var newFile = ImageUtils.Resize(file, percent);
+            var newFile = ImageUtils.Resize(file, height, width);
             _fileServerService.Update(new MemoryStream(newFile), id);
 
             var result = new ImageResizeMessageResponse()
