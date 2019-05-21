@@ -19,5 +19,5 @@ WORKDIR /app
 COPY --from=build-env /app/Resizer/out .
 ENTRYPOINT ["dotnet", "Resizer.dll"]
 
-# docker build --no-cache -t otaviojulianons/api-resizer:1.0.2 -f Resizer/Dockerfile .
-# docker run -d -p 9002:80 --name api-resizer otaviojulianons/api-resizer:1.0.2
+# docker build --no-cache -t otaviojulianons/api-resizer:1.0.3 -f Resizer/Dockerfile .
+# docker run -d -p 9002:80 --name api-resizer otaviojulianons/api-resizer:1.0.3

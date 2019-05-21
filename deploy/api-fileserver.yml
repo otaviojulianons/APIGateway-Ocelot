@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: api-resizer
+  name: api-fileserver
 spec:
   replicas: 1
   selector:
@@ -15,7 +15,7 @@ spec:
     spec:
       containers:          
       - name: api-fileserver
-        image: otaviojulianons/api-fileserver:1.0.1
+        image: otaviojulianons/api-fileserver:1.0.3
         resources:
           limits:
             memory: "112Mi"

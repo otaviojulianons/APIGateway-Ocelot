@@ -21,5 +21,5 @@ WORKDIR /app
 COPY --from=build-env /app/APIGateway/out .
 ENTRYPOINT ["dotnet", "APIGateway.dll"]
 
-# docker build -t otaviojulianons/api-gateway:1.0.1 -f APIGateway/Dockerfile .
-# docker run -d -p 8082:80 --name api-gateway otaviojulianons/api-gateway:1.0.1
+# docker build --no-cache -t otaviojulianons/api-gateway:1.0.2 -f APIGateway/Dockerfile .
+# docker run -d -p 8082:80 --name api-gateway  

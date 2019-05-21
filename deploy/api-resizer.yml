@@ -15,7 +15,7 @@ spec:
     spec:
       containers:          
       - name: api-resizer
-        image: otaviojulianons/api-resizer:1.0.2
+        image: otaviojulianons/api-resizer:1.0.3
         resources:
           limits:
             memory: "112Mi"

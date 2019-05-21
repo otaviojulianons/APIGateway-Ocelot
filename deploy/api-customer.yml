@@ -15,7 +15,7 @@ spec:
     spec:
       containers:          
       - name: api-customer
-        image: otaviojulianons/api-customer:1.0.1
+        image: otaviojulianons/api-customer:1.0.3
         resources:
           limits:
             memory: "112Mi"
