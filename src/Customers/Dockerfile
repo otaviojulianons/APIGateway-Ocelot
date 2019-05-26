@@ -12,8 +12,6 @@ RUN dotnet restore Customers/Customers.csproj
 COPY /Customers ./Customers
 COPY /SharedKernel ./SharedKernel
 
-RUN echo $ASPNETCORE_ENVIRONMENT
-
 RUN dotnet publish Customers/Customers.csproj -c Release -o out --no-restore
 
 # Build runtime image
@@ -23,5 +21,6 @@ WORKDIR /app
 COPY --from=build-env /app/Customers/out .
 ENTRYPOINT ["dotnet", "Customers.dll"]
 
-# docker build --no-cache -t otaviojulianons/api-customer:1.0.2 -f Customers/Dockerfile .
-# docker run -d -p 9001:80  --name api-customer otaviojulianons/api-customer:1.0.2
+
+# docker build --no-cache -t otaviojulianons/api-customer:1.0.3 -f Customers/Dockerfile .
+# docker run -d -p 9001:80 --name api-customer otaviojulianons/api-customer:1.0.3

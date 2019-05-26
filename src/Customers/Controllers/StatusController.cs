@@ -15,6 +15,8 @@ namespace Customers.Controllers
             _accessor = accessor;
         }
 
+
+
         [HttpGet]
         public ActionResult<object> Get()
         {

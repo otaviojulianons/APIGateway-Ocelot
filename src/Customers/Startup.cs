@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.PlatformAbstractions;
+using SharedKernel;
 using Swashbuckle.AspNetCore.Swagger;
 using System;
 using System.IO;
@@ -28,7 +29,7 @@ namespace Customers
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.Configure<ConsulConfig>(Configuration.GetSection("consulConfig"));
+            services.Configure<ConsulConfig>(Configuration.GetSection("consulConfig"));
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSwaggerGen(c =>
             {
@@ -67,15 +68,11 @@ namespace Customers
             });
             services.AddHostedService<BusServiceHosted>();
             services.AddSingleton<CustomerService>();
-
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, IApplicationLifetime lifetime)
         {
-
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -85,6 +82,7 @@ namespace Customers
                 app.UseHsts();
             }
 
+
             app.UseStaticFiles();
             app.UseHttpsRedirection();
             app.UseSwagger();
@@ -93,7 +91,7 @@ namespace Customers
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
             });
             app.UseMvc();
-            //app.RegisterWithConsul(lifetime);
+            app.RegisterWithConsul(lifetime);
         }
     }
 }

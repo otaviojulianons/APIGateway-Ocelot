@@ -24,8 +24,8 @@ namespace APIGateway
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddOcelot();
-            //services.AddOcelot().AddConsul();
+            //services.AddOcelot();
+            services.AddOcelot().AddConsul();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

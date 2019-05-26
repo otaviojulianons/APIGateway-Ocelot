@@ -11,6 +11,7 @@ docker push otaviojulianons/api-resizer:1.0.3
 docker push otaviojulianons/api-customer:1.0.3
 docker push otaviojulianons/api-fileserver:1.0.3
 
+cd ..\deploy
 pause
 
 

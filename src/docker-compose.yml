@@ -8,6 +8,7 @@ services:
       - my_net      
     depends_on:
       - rabbitmq
+      - consul      
   api-customer:
     image: "otaviojulianons/api-customer:1.0.3"
     ports:
@@ -15,15 +16,17 @@ services:
     networks:
       - my_net  
     depends_on:
-      - rabbitmq    
+      - rabbitmq  
+      - consul        
   api-resizer:
     image: "otaviojulianons/api-resizer:1.0.3"
     ports:
       - "5007:80"
     networks:
-      - my_net    
+      - my_net   
     depends_on:
       - rabbitmq        
+      - consul       
   api-fileserver:
     image: "otaviojulianons/api-fileserver:1.0.3"
     ports:
@@ -32,6 +35,7 @@ services:
       - my_net            
     depends_on:
       - rabbitmq
+      - consul      
   rabbitmq:
     image: "rabbitmq:3-management"
     ports:
@@ -42,6 +46,12 @@ services:
       - my_net          
     # docker run -d -p 15672:15672 -p 5672:5672 -p 25676:25676 --name myrabbit rabbitmq:3-management
     # user: guest password: guest
+  consul:
+    image: "consul:latest"
+    ports:
+      - "8500:8500"
+    networks:
+      - my_net           
 networks:
   my_net:
     driver: bridge  
