@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: konga
+  labels:
+    k8s-app: konga
+spec: 
+  containers:
+    - name: konga
+      image: "pantsel/konga"
+      env:
+        - name: NODE_ENV
+          value: "production"                                      
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: konga
+  labels:
+    k8s-app: konga
+spec:
+  type: LoadBalancer
+  selector:
+    k8s-app: konga
+  ports:
+  - protocol: TCP
+    port: 1337
+    targetPort: 1337       
+
+#docker run -d -p 1337:1337 --network=kong-net --name konga -v /var/data/kongadata:/app/kongadata -e "NODE_ENV=production" pantsel/konga          
+#docker run -d -p 1337:1337 --name konga -e "NODE_ENV=production" pantsel/konga          
