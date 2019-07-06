@@ -89,7 +89,6 @@ namespace Resizer
             }
 
             app.UseStaticFiles();
-            app.UseHttpsRedirection();
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {

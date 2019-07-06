@@ -46,7 +46,6 @@ namespace FileServer
             }
 
             app.UseStaticFiles();
-            app.UseHttpsRedirection();
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {

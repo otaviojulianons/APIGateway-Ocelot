@@ -22,5 +22,5 @@ COPY --from=build-env /app/Customers/out .
 ENTRYPOINT ["dotnet", "Customers.dll"]
 
 
-# docker build --no-cache -t otaviojulianons/api-customer:1.0.3 -f Customers/Dockerfile .
-# docker run -d -p 9001:80 --name api-customer otaviojulianons/api-customer:1.0.3
+# docker build --no-cache -t otaviojulianons/api-customer:1.0.4 -f Customers/Dockerfile .
+# docker run -d -p 9001:80 -v $(pwd):/logs --name api-customer otaviojulianons/api-customer:1.0.4

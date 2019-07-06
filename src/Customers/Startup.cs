@@ -9,8 +9,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.PlatformAbstractions;
+using Serilog;
 using SharedKernel;
+using SharedKernel.Log;
+using SharedKernel.Middleware;
 using Swashbuckle.AspNetCore.Swagger;
 using System;
 using System.IO;
@@ -29,6 +33,7 @@ namespace Customers
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            Configuration.ConfigureSerilog();
             services.Configure<ConsulConfig>(Configuration.GetSection("consulConfig"));
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSwaggerGen(c =>
@@ -71,8 +76,10 @@ namespace Customers
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IApplicationLifetime lifetime)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IApplicationLifetime lifetime, ILoggerFactory loggerFactory)
         {
+            loggerFactory.AddSerilog();
+            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -81,10 +88,8 @@ namespace Customers
             {
                 app.UseHsts();
             }
-
-
+            //app.UseMiddleware<LogRequestMiddleare>();
             app.UseStaticFiles();
-            app.UseHttpsRedirection();
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {

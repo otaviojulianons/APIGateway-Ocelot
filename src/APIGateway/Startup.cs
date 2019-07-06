@@ -40,7 +40,6 @@ namespace APIGateway
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
             app.UseMvc();
             app.UseOcelot();
         }
