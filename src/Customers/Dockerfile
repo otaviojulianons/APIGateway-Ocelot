@@ -18,9 +18,14 @@ RUN dotnet publish Customers/Customers.csproj -c Release -o out --no-restore
 FROM microsoft/dotnet:aspnetcore-runtime
 WORKDIR /app
 
+RUN mkdir logs
+RUN chmod 777 /app/logs
+
+VOLUME [ "/app/logs" ]
+
 COPY --from=build-env /app/Customers/out .
 ENTRYPOINT ["dotnet", "Customers.dll"]
 
 
 # docker build --no-cache -t otaviojulianons/api-customer:1.0.4 -f Customers/Dockerfile .
-# docker run -d -p 9001:80 -v $(pwd):/logs --name api-customer otaviojulianons/api-customer:1.0.4
+# docker run -d -p 9001:80 -v /tmp/logs:/app/logs --name api-customer otaviojulianons/api-customer:1.0.4

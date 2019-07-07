@@ -16,8 +16,13 @@ RUN dotnet publish Resizer/Resizer.csproj -c Release -o out --no-restore
 FROM microsoft/dotnet:aspnetcore-runtime
 WORKDIR /app
 
+RUN mkdir logs
+RUN chmod 777 /app/logs
+
+VOLUME [ "/app/logs" ]
+
 COPY --from=build-env /app/Resizer/out .
 ENTRYPOINT ["dotnet", "Resizer.dll"]
 
-# docker build --no-cache -t otaviojulianons/api-resizer:1.0.3 -f Resizer/Dockerfile .
-# docker run -d -p 9002:80 --name api-resizer otaviojulianons/api-resizer:1.0.3
+# docker build --no-cache -t otaviojulianons/api-resizer:1.0.4 -f Resizer/Dockerfile .
+# docker run -d -p 9002:80 -v /tmp/logs:/app/logs --name api-resizer otaviojulianons/api-resizer:1.0.4
