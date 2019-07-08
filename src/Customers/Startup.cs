@@ -13,8 +13,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.PlatformAbstractions;
 using Serilog;
 using SharedKernel;
-using SharedKernel.Log;
-using SharedKernel.Middleware;
+using SharedKernel.Logger;
 using Swashbuckle.AspNetCore.Swagger;
 using System;
 using System.IO;
@@ -88,7 +87,7 @@ namespace Customers
             {
                 app.UseHsts();
             }
-            //app.UseMiddleware<LogRequestMiddleare>();
+            app.UseMiddleware<LogRequestMiddleare>();
             app.UseStaticFiles();
             app.UseSwagger();
             app.UseSwaggerUI(c =>

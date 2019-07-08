@@ -1,7 +1,7 @@
 ﻿
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using SharedKernel.Log;
+using SharedKernel.Logger;
 
 namespace Customers
 {

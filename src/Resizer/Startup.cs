@@ -12,7 +12,7 @@ using Microsoft.Extensions.PlatformAbstractions;
 using Resizer.Consumers;
 using Serilog;
 using SharedKernel;
-using SharedKernel.Log;
+using SharedKernel.Logger;
 using Swashbuckle.AspNetCore.Swagger;
 using System;
 using System.IO;

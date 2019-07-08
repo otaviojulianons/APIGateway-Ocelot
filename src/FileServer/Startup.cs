@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.PlatformAbstractions;
 using Serilog;
-using SharedKernel.Log;
+using SharedKernel.Logger;
 using Swashbuckle.AspNetCore.Swagger;
 using System.IO;
 
